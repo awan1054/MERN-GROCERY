@@ -1,5 +1,5 @@
 
-import { Schema,model } from "mongoose";
+import mongoose, { Schema,model } from "mongoose";
 
 const productSchema=new Schema({
     productname:{
@@ -24,7 +24,7 @@ const productSchema=new Schema({
         trim:true,
     },
     category:{
-        type:[Schema.types.objectId],
+        type:[Schema.Types.objectId],
         ref:"Category",
         required:[true,"category is required"],
 
