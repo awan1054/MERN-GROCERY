@@ -1,11 +1,11 @@
 import Product from "../../model/product.model.js"
 
 export const CreateProduct=async (req,res,next)=>{
-    const {name,details,price,category,stack,slug,ingredients,type}=req.body
-    const image=req.file.file?req.file.path:undefined
+    const {productname,details,price,category,stack,slug,ingredients,type}=req.body
+    const image=req.file?req.file.path:null
 try {
 await Product.create({
-    name,details,image
+    productname,details,image
     
     ,price,category,stack,slug,ingredients,type
 })

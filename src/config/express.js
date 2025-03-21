@@ -7,7 +7,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use("/upload",express.static(uploadPath))
 
-app.use("/api/v1",router)
+app.use(router)
 
 app.use((err,_req,res,next)=>{
     const status=err?.status || 500;

@@ -1,10 +1,10 @@
-import Category from "../../model/catg.model"
+import Category from "../../model/catg.model.js"
 
 export const createCatgeory=async(req,res,next)=>{
-    const {name,catgImg}=req.body
+    const {name}=req.body
     try {
         await Category.create({
-            name,catgImg
+            name,catgImg:req.file?req.file.path:null
         })
         res.status(201).json({
             message:"category created successfully"
