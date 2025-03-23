@@ -2,12 +2,12 @@ import { Schema,model,Types } from "mongoose";
 
 const reviewSchema =new Schema({
     userId:{
-        type:Types.objectId,
+        type:Types.ObjectId,
         ref:"User",
         required:[true,"userid is required"]
     },
     productId:{
-        type:Types.objectId,
+        type:Types.ObjectId,
         ref:"Product",
         required:[true,"productid is required"]
     },

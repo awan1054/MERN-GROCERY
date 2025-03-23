@@ -1,5 +1,5 @@
 import express from "express"
-import { createOrder, deleteOrder, getAllOrders, getOrderById, updateOrderStatus } from "./order.controller"
+import { createOrder, deleteOrder, getAllOrders, getOrderById, updateOrderStatus } from "./order.controller.js"
 
 
 

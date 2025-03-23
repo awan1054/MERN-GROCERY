@@ -1,24 +1,22 @@
-import multer from "multer"
+import multer from "multer";
 import { UPLOAD } from "../../middleware/upload.middleware.js";
 
-const UploadImg=multer({
-   storage:multer.diskStorage({
-    destination:(_req,file,cb)=>{
-cb(null,UPLOAD);
-
+const UploadImg = multer({
+  storage: multer.diskStorage({
+    destination: (_req, file, cb) => {
+      cb(null, UPLOAD);
     },
-    filename:(_req,file,cb)=>{
-        const uniqueSuffix=Date.now()+"-"+Math.round(Math.random()*1e9)
-        cb(null,`${uniqueSuffix}-${file.originalname}`)
+    filename: (_req, file, cb) => {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, `${uniqueSuffix}-${file.originalname}`);
+    },
+  }),
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images are allowed"), false);
     }
-   }),
-   fileFilter:(_req,file,cb)=>{
-    if(file.mimetype.startsWith("image/")){
-        cb(null,true)
-    }
-    else{
-        cb(new Error("Only images are allowed"),false )
-    }
-   },
-})
-export default UploadImg
+  },
+});
+export default UploadImg;

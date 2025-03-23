@@ -1,67 +1,65 @@
-import {
-    Schema, model
-} from "mongoose"
+import { Schema, model, Types } from "mongoose";
 
-const orderSchema = new Schema({
+const orderSchema = new Schema(
+  {
     userId: {
-        type: Types.objectId,
-        ref: "User",
-        required: [true, "userid is required"]
+      type: Types.ObjectId,
+      ref: "User",
+      required: [true, "userid is required"],
     },
     orderItem: [
-            {
+      {
         productId: {
-            type: Types.objectId,
-            ref: "Product",
-            required: [true, "productid is required"]
+          type: Types.ObjectId,
+          ref: "Product",
+          required: [true, "productid is required"],
         },
         name: {
-            type: String,
-            required: true
+          type: String,
+          required: true,
         },
         price: {
-            type: Number,
-            required: true
+          type: Number,
+          required: true,
         },
         quantity: {
-            type: Number, required: true
+          type: Number,
+          required: true,
         },
         image: {
-            type: [String],
-            required: true
+          type: [String],
+          required: true,
         },
-
-    },
+      },
     ],
-    shippingInfo:[{
-        country:{
-            type:String,
-            required:[true,"shipping country is required"]
-        },
-        city:{
-            type:String,
-            required:[true,"shipping city is required"]
-        },
-        state:{
-            type:String,
-            required:[true,"shipping state is required"]
-        },
-        address:{
-            type:String,
-            required:[true,"shipping address is required"]
-        }
+    // shippingInfo:[{
+    //     country:{
+    //         type:String,
+    //         required:[true,"shipping country is required"]
+    //     },
+    //     city:{
+    //         type:String,
+    //         required:[true,"shipping city is required"]
+    //     },
+    //     state:{
+    //         type:String,
+    //         required:[true,"shipping state is required"]
+    //     },
+    //     address:{
+    //         type:String,
+    //         required:[true,"shipping address is required"]
+    //     }
 
-    }],
-    status:{
-        type:String,
-        enum:["processing","delivery","delivered",
-            "refunded","rejected"
-        ],
-        default:"processing"
-    }
-    
-},{
-    timestamps:true
-})
-const Order=model("Order",orderSchema)
-export default Order
+    // }],
+    status: {
+      type: String,
+      enum: ["processing", "delivery", "delivered", "refunded", "rejected"],
+      default: "processing",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+const Order = model("Order", orderSchema);
+export default Order;

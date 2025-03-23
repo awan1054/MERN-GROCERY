@@ -1,5 +1,5 @@
 import express from "express"
-import { createReview, getAllReview, getSingleReview, upadateReview } from "./review.controller"
+import { createReview, getAllReview, getSingleReview, upadateReview } from "./review.controller.js"
 
 
 
