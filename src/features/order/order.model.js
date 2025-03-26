@@ -28,33 +28,36 @@ const orderSchema = new Schema(
         },
         image: {
           type: [String],
-          required: true,
         },
       },
     ],
-    // shippingInfo:[{
-    //     country:{
-    //         type:String,
-    //         required:[true,"shipping country is required"]
-    //     },
-    //     city:{
-    //         type:String,
-    //         required:[true,"shipping city is required"]
-    //     },
-    //     state:{
-    //         type:String,
-    //         required:[true,"shipping state is required"]
-    //     },
-    //     address:{
-    //         type:String,
-    //         required:[true,"shipping address is required"]
-    //     }
-
-    // }],
+    shippingInfo: [
+      {
+        country: {
+          type: String,
+          required: [true, "shipping country is required"],
+        },
+        city: {
+          type: String,
+          required: [true, "shipping city is required"],
+        },
+        state: {
+          type: String,
+          required: [true, "shipping state is required"],
+        },
+        address: {
+          type: String,
+          required: [true, "shipping address is required"],
+        },
+      },
+    ],
     status: {
       type: String,
       enum: ["processing", "delivery", "delivered", "refunded", "rejected"],
       default: "processing",
+    },
+    total: {
+      type: Types.Decimal128,
     },
   },
   {

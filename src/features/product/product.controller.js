@@ -1,4 +1,4 @@
-import Product from "../../model/product.model.js";
+import Product from "./product.model.js";
 
 export const CreateProduct = async (req, res, next) => {
   const {
@@ -22,6 +22,7 @@ export const CreateProduct = async (req, res, next) => {
       price,
       category,
       stock,
+      remainingStock: stock,
       slug,
       ingredients,
       type,

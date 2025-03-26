@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import Order from "../../model/order.model.js";
-import Product, { ProductType } from "../../model/product.model.js";
-import cError from "../../utils/customErrorHandler.js";
+import Order from "./order.model.js";
+import Product, { ProductType } from "../product/product.model.js";
 
 // Create a new order
 
@@ -10,68 +9,46 @@ export const createOrder = async (req, res, next) => {
     const { userId, orderItems, shippingInfo, status } = req.body;
 
     // Input validation
-    if (!userId || !orderItems) {
+    if (!userId || !orderItems || !shippingInfo) {
       return res.status(400).json({ message: "Required fields are missing." });
     }
 
-    // Get product IDs from order items
-    const ordersproductId = orderItems?.map((item) => {
-      return item.producdId;
-    });
+    const updatedCart = [];
+    for (const item of orderItems) {
+      const product = await Product.findById(item._id);
+      if (!product) throw new Error(`Product ${item._id} no longer exists`);
 
-    // Find all products
-    const products = await Product.find({
-      _id: { $in: ordersproductId },
-    });
+      if (product.remainingStock < item.quantity)
+        throw new Error(`Not enough stock for ${product.name}`);
 
-    // Validate stock levels
-    const hasINStockItem = products.map((p) => {
-      console.log("-----", p);
-      const orderItem = orderItems.find((o) => o.producdId === p._id);
-      console.log("----", orderItem);
-
-      if (!orderItem) return null;
-
-      const hasInStock = Number(p.stock) <= Number(orderItem.qty);
-      console(p.stock);
-      console(Number(p.stock));
-      console(Number(orderItem.qty));
-      if (!hasInStock) {
-        return res.status(400).json({
-          message: `out of stock ${p.productname}`,
-        });
-      }
-
-      return {
-        productId: p._id,
-        name: p.productname,
-        price: p.price,
-        quantity: orderItem.qty,
-        image: p.image,
-      };
-    });
-    console.log("-----2");
-
-    // Remove null values (products that were out of stock)
-    const validOrderItems = hasINStockItem.filter((item) => item !== null);
-
-    if (validOrderItems.length === 0) {
-      return res.status(400).json({
-        message: "All products are out of stock",
+      updatedCart.push({
+        name: product.productname,
+        quantity: item.quantity,
+        price: product.price,
+        image: product.image,
+        productId: product._id,
       });
+      product.remainingStock = product.remainingStock - item.quantity;
+      await product.save();
     }
 
+    const updatedTotal = updatedCart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    console.log(updatedCart);
     // Create new order
     const newOrder = new Order({
       userId,
-      orderItems: validOrderItems,
+      orderItem: updatedCart,
       shippingInfo,
+      total: updatedTotal,
       status: status || "processing",
     });
 
     // Save the order
-    const savedOrder = await newOrder.save();
-    return res.status(201).json(savedOrder);
+    await newOrder.save();
+    return res.status(201).json({ message: "Order created successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -105,7 +82,7 @@ export const getOrderById = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().sort({ createdAt: "desc" });
 
     return res.status(200).json(orders);
   } catch (error) {
