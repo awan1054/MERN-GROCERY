@@ -1,5 +1,6 @@
+import cError from "../../utils/customErrorHandler.js";
 import User from "./user.model.js";
-import bcrypt from "bcrypt";
+import bcrypt, { hashSync } from "bcrypt";
 export const CreateUser = async (req, res, next) => {
   const {
     firstName,
@@ -104,4 +105,28 @@ export const singleUser = async (req, res, next) => {
     message: "single user fetched successfully",
     data: user,
   });
+};
+
+export const loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(cError(400, "email password are required"));
+  }
+
+  try {
+    const foundAccount = await User.findOne({ email });
+    if (!foundAccount) {
+      return next(cError(400, "Invalid credentials"));
+    }
+    const isvalidPassword = bcrypt.compareSync(password, foundAccount.password);
+    if (!isvalidPassword) {
+      return next(cError(400, "Invalid credentials"));
+    }
+
+    res.status(200).json({
+      message: "You are logged in " + foundAccount.firstName,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

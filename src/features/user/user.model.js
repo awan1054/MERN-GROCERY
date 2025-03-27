@@ -24,31 +24,30 @@ const UserSchema = new Schema(
       trim: true,
       minLength: [8, "password must be at least 8 character"],
     },
-    //     country:{
-    //         type:String,
-    //         required:[true,"country is required"],
-    //         trim:true
-    //     },
-    //     state:{
-    //         type:String,
-    //         required:[true,"state  is required"],
-    //         trim:true
-    //     },
-    //    city:{
-    //         type:String,
-    //         required:[true,"city is required"],
-    //         trim:true
-    //     },
-    //     address:{
-
-    //         type:String,
-    //         required:[true]
-    //     },
-    // zipcode:{
-    //     type:String,
-    //     required:true,
-    //     trim:true
-    // }
+    country: {
+      type: String,
+      required: [true, "country is required"],
+      trim: true,
+    },
+    state: {
+      type: String,
+      required: [true, "state  is required"],
+      trim: true,
+    },
+    city: {
+      type: String,
+      required: [true, "city is required"],
+      trim: true,
+    },
+    address: {
+      type: String,
+      required: [true],
+    },
+    zipcode: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

@@ -5,6 +5,8 @@ import Product, { ProductType } from "../product/product.model.js";
 // Create a new order
 
 export const createOrder = async (req, res, next) => {
+  const session = await Order.startSession();
+  session.startTransaction();
   try {
     const { userId, orderItems, shippingInfo, status } = req.body;
 
@@ -15,7 +17,7 @@ export const createOrder = async (req, res, next) => {
 
     const updatedCart = [];
     for (const item of orderItems) {
-      const product = await Product.findById(item._id);
+      const product = await Product.findById(item._id).session(session);
       if (!product) throw new Error(`Product ${item._id} no longer exists`);
 
       if (product.remainingStock < item.quantity)
@@ -29,7 +31,7 @@ export const createOrder = async (req, res, next) => {
         productId: product._id,
       });
       product.remainingStock = product.remainingStock - item.quantity;
-      await product.save();
+      await product.save({ session });
     }
 
     const updatedTotal = updatedCart.reduce(
@@ -47,10 +49,14 @@ export const createOrder = async (req, res, next) => {
     });
 
     // Save the order
-    await newOrder.save();
+    await newOrder.save({ session });
+    await session.commitTransaction();
+    session.endSession();
     return res.status(201).json({ message: "Order created successfully" });
   } catch (error) {
     console.error(error);
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).json({
       message: "Server error while creating the order",
       error: error.message,
@@ -86,7 +92,7 @@ export const getAllOrders = async (req, res) => {
 
     return res.status(200).json(orders);
   } catch (error) {
-    console.error(error);
+    console.error(error); //hello
     return res
       .status(500)
       .json({ message: "Server error while fetching orders" });
