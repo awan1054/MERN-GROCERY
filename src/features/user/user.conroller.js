@@ -1,6 +1,8 @@
 import cError from "../../utils/customErrorHandler.js";
 import User from "./user.model.js";
 import bcrypt, { hashSync } from "bcrypt";
+
+import jwt from "jsonwebtoken";
 export const CreateUser = async (req, res, next) => {
   const {
     firstName,
@@ -123,9 +125,23 @@ export const loginUser = async (req, res, next) => {
       return next(cError(400, "Invalid credentials"));
     }
 
-    res.status(200).json({
-      message: "You are logged in " + foundAccount.firstName,
-    });
+    const token = jwt.sign(
+      {
+        data: foundAccount._id,
+      },
+      process.env.secretKey,
+      { expiresIn: "1h" }
+    );
+    res
+      .cookie("token", token, {
+        maxAge: 60 * 60 * 1000,
+        secure: false,
+        httpOnly: true,
+      })
+      .status(200)
+      .json({
+        message: "You are logged in " + foundAccount.firstName,
+      });
   } catch (error) {
     next(error);
   }
