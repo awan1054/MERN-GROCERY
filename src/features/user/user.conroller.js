@@ -9,11 +9,11 @@ export const CreateUser = async (req, res, next) => {
     lastName,
     email,
     country,
-    address,
-    zipcode,
+    // address,
+    // zipcode,
     password,
-    city,
-    state,
+    // city,
+    // state,
   } = req.body;
 
   try {
@@ -21,12 +21,12 @@ export const CreateUser = async (req, res, next) => {
       firstName,
       lastName,
       email,
-      city,
+      // city,
       country,
-      zipcode,
-      address,
+      // zipcode,
+      // address,
       password,
-      state,
+      // state,
     });
     Newuser.password = await bcrypt.hashSync(password, 8);
     await Newuser.save();
@@ -132,15 +132,17 @@ export const loginUser = async (req, res, next) => {
       process.env.secretKey,
       { expiresIn: "1h" }
     );
+    console.log(process.env.NODE_ENV);
     res
       .cookie("token", token, {
-        maxAge: 60 * 60 * 1000,
-        secure: false,
-        httpOnly: true,
+        httpOnly: true, // Prevents JavaScript access
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        // secure: process.env.NODE_ENV === "production", // HTTPS only in production
       })
       .status(200)
       .json({
         message: "You are logged in " + foundAccount.firstName,
+        token: token,
       });
   } catch (error) {
     next(error);

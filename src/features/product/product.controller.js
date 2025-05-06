@@ -18,7 +18,6 @@ export const CreateProduct = async (req, res, next) => {
       productname,
       details,
       image,
-
       price,
       category,
       stock,

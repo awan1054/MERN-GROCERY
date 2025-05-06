@@ -29,25 +29,6 @@ const UserSchema = new Schema(
       required: [true, "country is required"],
       trim: true,
     },
-    state: {
-      type: String,
-      required: [true, "state  is required"],
-      trim: true,
-    },
-    city: {
-      type: String,
-      required: [true, "city is required"],
-      trim: true,
-    },
-    address: {
-      type: String,
-      required: [true],
-    },
-    zipcode: {
-      type: String,
-      required: true,
-      trim: true,
-    },
   },
   { timestamps: true }
 );
