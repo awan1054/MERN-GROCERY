@@ -1,3 +1,4 @@
+import Product from "../product/product.model.js";
 import Category from "./catg.model.js";
 export const createCatgeory = async (req, res, next) => {
   const { name } = req.body;
@@ -49,6 +50,17 @@ export const getAllCategory = async (req, res, next) => {
       message: "catgeory fetched successfully",
       data: data,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllProductwithCategoryId = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const product = await Product.find()
+      .where({ category: id })
+      .populate("category", "name");
+    res.status(200).json(product);
   } catch (error) {
     next(error);
   }

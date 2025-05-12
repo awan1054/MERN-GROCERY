@@ -95,7 +95,7 @@ export const getAllProduct = async (req, res, next) => {
 export const getSingleProduct = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const { data } = await Product.findById(id);
+    const data = await Product.findById(id);
     res.status(200).json({
       message: "Single product fetched successfully",
       data,
